@@ -1,0 +1,21 @@
+{
+  "name": "overcast-stats",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Pascal Weiland <pasweiland@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "cheerio": "^1.0.0-rc.5",
+    "dayjs": "^1.10.4",
+    "dotenv": "^8.2.0",
+    "form-data": "^4.0.0",
+    "got": "^11.8.2",
+    "winston": "^3.3.3"
+  }
+}
