@@ -55,8 +55,8 @@ function getLatestHTMLFile() {
 }
 
 function getLatestJSONFiles() {
-  const files = orderReccentFiles(dir);
-  return files.length >= 2 ? [join(dir, files[0].file), join(dir, files[1].file)] : undefined;
+  const files = orderReccentFiles(JSONDataDirectory);
+  return files.length >= 2 ? [join(JSONDataDirectory, files[0].file), join(JSONDataDirectory, files[1].file)] : undefined;
 }
 
 function savePodcastsHTML(html) {

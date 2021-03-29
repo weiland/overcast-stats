@@ -1,4 +1,6 @@
-# Overcast client and podcasts stats
+# [Overcast App Podcasts listening statistics](https://github.com/weiland/overcast-stats/)
+
+> Create your own podcast listening statistics by regularly downloading your podcast information from overcast.fm
 
 ## Installation
 

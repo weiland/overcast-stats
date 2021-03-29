@@ -15,7 +15,41 @@ async function convertPodcasts(filename) {
   savePodcastsJSON(filename, parsed);
 }
 
-async function updatePodcasts() {
+function getPodcastStats(currentPodcasts, beforePodcasts) {
+  const current = currentPodcasts.map(p => p.url);
+  const before = beforePodcasts.map(p => p.url);
+  const added = current.filter(podcast => !before.includes(podcast));
+  const deleted = before.filter(podcast => !current.includes(podcast));
+  
+  return {
+    added,
+    deleted,
+  }
+}
+
+function getEpisodesStats(currentEpisodes, beforeEpisodes) {
+  const current = new Map();
+  const before = new Map();
+
+  currentEpisodes.forEach(e => current.set(e.url, e))
+  beforeEpisodes.forEach(e => before.set(e.url, e))
+
+  const deleted = beforeEpisodes.filter(e => !current.has(e.url))
+  const added = currentEpisodes.filter(e => !before.has(e.url))
+  const timeChanged = currentEpisodes.filter(e =>
+    !before.has(e.url)
+      ? false
+      : e.time !== before.get(e.url).time);
+
+  
+  return {
+    added,
+    deleted,
+    timeChanged,
+  }
+}
+
+async function downloadNewInformation() {
   const mrf = getLatestHTMLFile();
   const contents = await readFile(mrf, 'utf8');
 
@@ -32,16 +66,29 @@ async function updatePodcasts() {
 
   // const filename = await download(client);
   await convertPodcasts(filename);
+}
+
+async function updatePodcasts() {
+
+  await downloadNewInformation();
+
+  info('compare last two json files');
 
   const [currentFile, beforeFile] = getLatestJSONFiles();
 
   const current = JSON.parse(await readFile(currentFile))
   const before = JSON.parse(await readFile(beforeFile));
 
-  // new played podcasts
-  
-  // new podcasts
-  
+  console.log('current', current.podcasts.length, current.episodes.length, current.playedPodcasts.length);
+  console.log('before', before.podcasts.length, before.episodes.length, before.playedPodcasts.length);
+  console.log(getEpisodesStats(current.episodes, before.episodes));
+  console.log(getPodcastStats(current.podcasts, before.podcasts));
+  console.log(getPodcastStats(current.playedPodcasts, before.playedPodcasts));
+
+  const allPodcasts = [...before.podcasts, ...current.podcasts]
+
+  console.log('all Podcasts (count)', allPodcasts.length);
+
   // length same?
   // new episode?
   // changed episode?
