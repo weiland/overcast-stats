@@ -1,6 +1,5 @@
 const { readFile } = require('fs').promises;
-// const download = require('./src/download.js');
-const { parsePodcasts } = require('./src/podcastParser.js');
+const { parsePodcasts } = require('./src/parsers.js');
 const { getLogger, getLatestHTMLFile, getLatestJSONFiles, savePodcastsHTML, savePodcastsJSON } = require('./src/utils.js');
 const overcastClient = require('./src/overcast.js');
 const { info } = getLogger('overcast-stats');

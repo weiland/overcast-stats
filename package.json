@@ -1,10 +1,12 @@
 {
   "name": "overcast-stats",
   "version": "1.0.0",
-  "description": "",
+  "description": "Overcast Podcasts statistics.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run dev",
+    "test": "ava",
+    "dev": "ava --watch --verbose --fail-fast"
   },
   "keywords": [],
   "author": "Pascal Weiland <pasweiland@gmail.com>",
@@ -17,5 +19,8 @@
     "form-data": "^4.0.0",
     "got": "^11.8.2",
     "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "ava": "^3.15.0"
   }
 }
