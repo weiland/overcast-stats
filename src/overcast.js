@@ -1,4 +1,3 @@
-import got from 'got';
 import FormData from 'form-data';
 
 const HOSTNAME = 'https://overcast.fm';
@@ -25,7 +24,9 @@ export default async function overcast({ token, email, password, obtainToken }) 
     form.append('email', email);
     form.append('password', password);
 
-    const { headers } = await got.post(LOGIN_URL, { body: form, followRedirect: false, });
+    const { headers } = await fetch(LOGIN_URL, { body: form, method: 'post' });
+
+    console.log(headers);
 
     const cookie = headers['set-cookie'];
 
@@ -39,12 +40,16 @@ export default async function overcast({ token, email, password, obtainToken }) 
   }
 
 
-  const get = got.extend({
-    prefixUrl: HOSTNAME,
-    headers: {
-      'Cookie': `o=${token}`,
-    },
-  });
+  async function get(url) {
+    const result = await fetch(`${HOSTNAME}${url}`, {
+      headers: {
+        'Cookie': `o=${token}`,
+      },
+    });
+    const body = await response.text();
+
+    return { body };
+  };
 
   async function podcasts() {
     const { body } = await get('podcasts');
@@ -74,7 +79,9 @@ export default async function overcast({ token, email, password, obtainToken }) 
     return body;
   }
 
-  const post = get.post;
+  async function post(url, form) {
+    return fetch(url, { method: 'post', body: form }).then(r => r.text());
+  }
 
   async function changeEmail(email) {
     // const { body } = await get('account/email'); // find name=ct
@@ -82,7 +89,7 @@ export default async function overcast({ token, email, password, obtainToken }) 
     const form = new FormData();
     form.append('ct', ct);
     form.append('email', email);
-    const { body } = await post('account/email');
+    const body = await post('account/email');
     return body;
   }
 
@@ -94,7 +101,7 @@ export default async function overcast({ token, email, password, obtainToken }) 
     form.append('password1', currentPassword);
     form.append('password2', newPassword);
     form.append('password3', newPasswordRepeated);
-    const { body } = await post('account/password', form);
+    const body = await post('account/password', form);
     return body;
   }
 
