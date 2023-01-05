@@ -47,6 +47,12 @@ main().catch(err => console.error(err));
 
 </details>
 
+## Run
+
+```command
+node index.js
+```
+
 ## Features
 
 - see when new podcasts episodes are published
