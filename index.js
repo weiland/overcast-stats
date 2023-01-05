@@ -1,12 +1,12 @@
-const { readFile } = require('fs').promises;
-const { parsePodcasts } = require('./src/parsers.js');
-const { getLogger, getLatestHTMLFile, getLatestJSONFiles, savePodcastsHTML, savePodcastsJSON } = require('./src/utils.js');
-const overcastClient = require('./src/overcast.js');
+import { readFile } from 'node:fs/promises';
+import { parsePodcasts } from './src/parsers.js';
+import { getLogger, getLatestHTMLFile, getLatestJSONFiles, savePodcastsHTML, savePodcastsJSON } from './src/utils.js';
+import overcastClient from './src/overcast.js';
+
 const { info } = getLogger('overcast-stats');
 
-require('dotenv').config();
-
-// const download = async (client) => savePodcastsHTML(await client.podcasts()) ;
+import { config } from 'dotenv';
+config();
 
 async function convertPodcasts(filename) {
   const podcasts = await readFile(filename, 'utf8');

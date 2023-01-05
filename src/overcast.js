@@ -1,14 +1,11 @@
-const got = require('got');
-const FormData = require('form-data');
-// const { load } = require('cheerio');
-
-// require('dotenv').config();
+import got from 'got';
+import FormData from 'form-data';
 
 const HOSTNAME = 'https://overcast.fm';
 const LOGIN_URL = 'https://overcast.fm/login';
 
 
-async function overcast({ token, email, password, obtainToken }) {
+export default async function overcast({ token, email, password, obtainToken }) {
 
   if (email && password) {
     token = await getToken({ email, password });
@@ -124,5 +121,3 @@ async function overcast({ token, email, password, obtainToken }) {
   
   return api;
 }
-
-module.exports = overcast;

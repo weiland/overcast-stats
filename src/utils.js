@@ -1,9 +1,11 @@
-const { readdirSync, readFileSync, lstatSync, writeFileSync } = require('fs');
-const { join, dirname, basename, extname } = require('path');
-const { createLogger, transports, format } = require('winston');
-const chalk = require('chalk');
-const dayjs = require('dayjs');
-const { combine, timestamp, label, printf } = format;
+import { readdirSync, readFileSync, lstatSync, writeFileSync } from 'node:fs';
+import { join, dirname, basename, extname } from 'node:path';
+// import { createLogger, transports, format } from 'winston';
+import winston from 'winston';
+import chalk from 'chalk';
+import dayjs from 'dayjs';
+
+const { combine, timestamp, label, printf } = winston.format;
 
 const myFormat = printf(({ level, message, label, timestamp }) => {
 
@@ -18,17 +20,17 @@ const myFormat = printf(({ level, message, label, timestamp }) => {
   return `${color[level](`${timestamp} [${chalk.bold(label)}]: `)} ${chalk.white(message)}`;
 });
 
-function getLogger(service = 'overcaster') {
-  return createLogger({
+export function getLogger(service = 'overcaster') {
+  return winston.createLogger({
     format: combine(
       label({ label: service }),
       timestamp(),
       myFormat,
-      format.splat(),
+      winston.format.splat(),
       // format.simple(),
       // format.colorize(),
     ),
-    transports: [new transports.Console()]
+    transports: [new winston.transports.Console()]
   });
 }
 
@@ -50,16 +52,16 @@ const HTMLDataDirectory = './data/html';
 // processed json files
 const JSONDataDirectory = './data/json';
 
-function getLatestHTMLFile() {
+export function getLatestHTMLFile() {
   return getMostRecentFile(HTMLDataDirectory);
 }
 
-function getLatestJSONFiles() {
+export function getLatestJSONFiles() {
   const files = orderReccentFiles(JSONDataDirectory);
   return files.length >= 2 ? [join(JSONDataDirectory, files[0].file), join(JSONDataDirectory, files[1].file)] : undefined;
 }
 
-function savePodcastsHTML(html) {
+export function savePodcastsHTML(html) {
   info('save podcast html');
   const date = dayjs().format('YYYY-MM-DD_HH-mm');
   const location = `${HTMLDataDirectory}/podcastsHtml_${date}.html`;
@@ -67,7 +69,7 @@ function savePodcastsHTML(html) {
   return location;
 }
 
-function savePodcastsJSON(originalFilename, json) {
+export function savePodcastsJSON(originalFilename, json) {
   info('save podcast json');
   const filename = basename(originalFilename, extname(originalFilename));
   const location = join(JSONDataDirectory, `${filename.replace('Html', 'Json')}.json`);
@@ -75,8 +77,3 @@ function savePodcastsJSON(originalFilename, json) {
   return location;
 }
 
-exports.getLogger = getLogger;
-exports.getLatestHTMLFile = getLatestHTMLFile;
-exports.getLatestJSONFiles = getLatestJSONFiles;
-exports.savePodcastsHTML = savePodcastsHTML;
-exports.savePodcastsJSON = savePodcastsJSON;

@@ -1,7 +1,9 @@
-const { load } = require('cheerio');
-const dayjs = require('dayjs');
+import { load } from 'cheerio';
+import dayjs from 'dayjs';
 
-const { info, error } = require('./utils.js').getLogger('podcast-parser');
+import { getLogger } from './utils.js';
+
+const { info, error } = getLogger('podcast-parser');
 
 function parseEpisode(anchor) {
   const url = anchor.attr('href');
@@ -24,7 +26,7 @@ function parseEpisode(anchor) {
   };
 }
 
-function parsePodcasts(anchor) {
+function parsePodcast(anchor) {
   const url = anchor.attr('href');
   const cover = anchor.find('.art').attr('src');
   const title = anchor.find('.title').text();
@@ -41,7 +43,7 @@ const p = 'Podcasts';
 const pp = 'Played Podcasts';
 
 
-function parseAllData(html) {
+export function parsePodcasts(html) {
 
   info('parse podcasts (all left episodes and podcasts)');
 
@@ -67,7 +69,7 @@ function parseAllData(html) {
     }
 
     if (elem.is('.feedcell')) {
-      const parsed = parsePodcasts(elem);
+      const parsed = parsePodcast(elem);
       if (status === p) {
         podcasts.push(parsed);
       } else {
@@ -86,4 +88,3 @@ function parseAllData(html) {
   };
 }
 
-exports.parsePodcasts = parseAllData;

@@ -1,7 +1,8 @@
 // if EMAIL and PASSWORD are stored in the `.env` file.
-require('dotenv').config();
+import { config } from 'dotenv';
+config();
 
-const overcastClient = require('./src/overcast.js');
+import overcastClient from './src/overcast.js';
 
 const main = async () => {
 
