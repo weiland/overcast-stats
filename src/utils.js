@@ -1,9 +1,20 @@
 import { readdirSync, readFileSync, lstatSync, writeFileSync } from 'node:fs';
-import { join, dirname, basename, extname } from 'node:path';
+import { join, dirname, basename, extname, resolve } from 'node:path';
+import { fileURLToPath, URL } from 'node:url';
 // import { createLogger, transports, format } from 'winston';
 import winston from 'winston';
 import chalk from 'chalk';
 import dayjs from 'dayjs';
+
+import { config } from 'dotenv';
+
+// ESM version
+// const __dirname = dirname(fileURLToPath(import.meta.url));
+const __dirname = new URL('.', import.meta.url).pathname; // with trailing slash
+
+config({ path: resolve(__dirname, '..', '.env') });
+
+export const token = process.env.TOKEN;
 
 const { combine, timestamp, label, printf } = winston.format;
 
@@ -48,9 +59,9 @@ const getMostRecentFile = (dir) => {
 };
 
 // raw html data
-const HTMLDataDirectory = './data/html';
+const HTMLDataDirectory = resolve(__dirname, '..', './data/html');
 // processed json files
-const JSONDataDirectory = './data/json';
+const JSONDataDirectory = resolve(__dirname, '..', './data/json');
 
 export function getLatestHTMLFile() {
   return getMostRecentFile(HTMLDataDirectory);
@@ -64,7 +75,7 @@ export function getLatestJSONFiles() {
 export function savePodcastsHTML(html) {
   info('save podcast html');
   const date = dayjs().format('YYYY-MM-DD_HH-mm');
-  const location = `${HTMLDataDirectory}/podcastsHtml_${date}.html`;
+  const location = resolve(HTMLDataDirectory, `podcastsHtml_${date}.html`);
   writeFileSync(location, html);
   return location;
 }

@@ -1,12 +1,9 @@
 import { readFile } from 'node:fs/promises';
 import { parsePodcasts } from './src/parsers.js';
-import { getLogger, getLatestHTMLFile, getLatestJSONFiles, savePodcastsHTML, savePodcastsJSON } from './src/utils.js';
+import { getLogger, getLatestHTMLFile, getLatestJSONFiles, savePodcastsHTML, savePodcastsJSON, token } from './src/utils.js';
 import overcastClient from './src/overcast.js';
 
 const { info } = getLogger('overcast-stats');
-
-import { config } from 'dotenv';
-config();
 
 async function convertPodcasts(filename) {
   const podcasts = await readFile(filename, 'utf8');
@@ -52,7 +49,7 @@ async function downloadNewInformation() {
   const mrf = getLatestHTMLFile();
   const contents = await readFile(mrf, 'utf8');
 
-  const client = await overcastClient({ token: process.env.TOKEN });
+  const client = await overcastClient({ token });
   const podcasts = await client.podcasts();
 
   if (podcasts === contents) {
